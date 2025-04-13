@@ -13,6 +13,7 @@
     "cheerio": "^1.0.0-rc.12",
     "clsx": "^2.1.1",
     "fast-xml-parser": "^4.3.2",
+    "lucide-react": "^0.488.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
