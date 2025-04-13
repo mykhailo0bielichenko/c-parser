@@ -1,0 +1,83 @@
+@keyframes flames {
+  0% {
+    background-position: 0% 50%;
+    box-shadow: 
+      0 0 15px rgba(255, 0, 128, 0.8), 
+      0 0 30px rgba(255, 0, 128, 0.7),
+      0 0 45px rgba(255, 0, 128, 0.6),
+      0 0 60px rgba(255, 0, 128, 0.5);
+    filter: brightness(1.5) contrast(1.5);
+  }
+  25% {
+    background-position: 50% 25%;
+    box-shadow: 
+      0 0 20px rgba(128, 0, 255, 0.9), 
+      0 0 40px rgba(128, 0, 255, 0.8),
+      0 0 60px rgba(128, 0, 255, 0.7),
+      0 0 80px rgba(128, 0, 255, 0.6);
+    filter: brightness(1.8) contrast(1.7);
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 
+      0 0 25px rgba(0, 255, 255, 0.95), 
+      0 0 50px rgba(0, 255, 255, 0.85),
+      0 0 75px rgba(0, 255, 255, 0.75),
+      0 0 100px rgba(0, 255, 255, 0.65);
+    filter: brightness(2.0) contrast(2.0);
+  }
+  75% {
+    background-position: 50% 75%;
+    box-shadow: 
+      0 0 20px rgba(128, 0, 255, 0.9), 
+      0 0 40px rgba(128, 0, 255, 0.8),
+      0 0 60px rgba(128, 0, 255, 0.7),
+      0 0 80px rgba(128, 0, 255, 0.6);
+    filter: brightness(1.8) contrast(1.7);
+  }
+  100% {
+    background-position: 0% 50%;
+    box-shadow: 
+      0 0 15px rgba(255, 0, 128, 0.8), 
+      0 0 30px rgba(255, 0, 128, 0.7),
+      0 0 45px rgba(255, 0, 128, 0.6),
+      0 0 60px rgba(255, 0, 128, 0.5);
+    filter: brightness(1.5) contrast(1.5);
+  }
+}
+
+.neon-flames {
+  background-size: 300% 300% !important;
+  background-image: linear-gradient(120deg, #ff00aa, #aa00ff, #00ffff, #aa00ff) !important;
+  animation: flames 5s ease infinite !important; /* Faster animation for more energy */
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  transition: all 0.2s ease;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6) !important;
+  position: relative;
+  z-index: 1;
+}
+
+.neon-flames::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  z-index: -1;
+  background: inherit;
+  filter: blur(10px);
+  opacity: 0.7;
+  border-radius: inherit;
+}
+
+.neon-flames:focus {
+  box-shadow: 
+    0 0 30px rgba(255, 0, 255, 0.9), 
+    0 0 60px rgba(0, 255, 255, 0.8),
+    0 0 90px rgba(255, 0, 128, 0.7),
+    0 0 120px rgba(128, 0, 255, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  transform: scale(1.03);
+  filter: brightness(1.5);
+}
