@@ -3,11 +3,19 @@ import { parseCasinoPage, type ParsedCasino } from '@/lib/parser';
 
 export class CasinoParserService {
     /**
+     * Helper function to create a timeout promise
+     */
+    private static async timeout(ms: number): Promise<void> {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    /**
      * Parse a casino page and save the data to the database
      */
     static async parseAndSaveCasino(
         url: string,
-        jobId?: number
+        jobId?: number,
+        retryAttempt: number = 0
     ): Promise<{
         success: boolean;
         casinoId?: number;
@@ -17,8 +25,16 @@ export class CasinoParserService {
         try {
             console.log(
                 jobId
-                    ? `[Job ${jobId}] Processing URL: ${url}`
-                    : `Starting to parse casino URL: ${url}`
+                    ? `[Job ${jobId}] Processing URL: ${url}${
+                          retryAttempt > 0
+                              ? ` (Retry attempt: ${retryAttempt})`
+                              : ''
+                      }`
+                    : `Starting to parse casino URL: ${url}${
+                          retryAttempt > 0
+                              ? ` (Retry attempt: ${retryAttempt})`
+                              : ''
+                      }`
             );
 
             // Parse the casino page
@@ -36,9 +52,28 @@ export class CasinoParserService {
                     job_id: jobId || null,
                 });
 
+                // If this is the first attempt, wait 30 seconds and retry
+                if (retryAttempt === 0) {
+                    console.log(
+                        `Will retry parsing URL ${url} in 30 seconds...`
+                    );
+                    await this.timeout(30000);
+                    return this.parseAndSaveCasino(
+                        url,
+                        jobId,
+                        retryAttempt + 1
+                    );
+                }
+
+                // Add 30 second timeout on final error before continuing to next URL
+                console.log(
+                    `Failed after retry, waiting 30 seconds before continuing...`
+                );
+                await this.timeout(30000);
+
                 return {
                     success: false,
-                    error: 'Failed to parse casino data. Please check server logs for more details.',
+                    error: 'Failed to parse casino data after retry. Please check server logs for more details.',
                 };
             }
 
@@ -92,8 +127,16 @@ export class CasinoParserService {
         } catch (error) {
             console.error(
                 jobId
-                    ? `[Job ${jobId}] Error processing ${url}:`
-                    : `Error parsing URL ${url}:`,
+                    ? `[Job ${jobId}] Error processing ${url}${
+                          retryAttempt > 0
+                              ? ` (Retry attempt: ${retryAttempt})`
+                              : ''
+                      }:`
+                    : `Error parsing URL ${url}${
+                          retryAttempt > 0
+                              ? ` (Retry attempt: ${retryAttempt})`
+                              : ''
+                      }:`,
                 error
             );
 
@@ -107,6 +150,21 @@ export class CasinoParserService {
                 message: `Error: ${errorMessage}`,
                 job_id: jobId || null,
             });
+
+            // If this is the first attempt, wait 30 seconds and retry
+            if (retryAttempt === 0) {
+                console.log(
+                    `Will retry parsing URL ${url} in 30 seconds after error...`
+                );
+                await this.timeout(30000);
+                return this.parseAndSaveCasino(url, jobId, retryAttempt + 1);
+            }
+
+            // Add 30 second timeout on final error before continuing to next URL
+            console.log(
+                `Failed after retry, waiting 30 seconds before continuing...`
+            );
+            await this.timeout(30000);
 
             return {
                 success: false,

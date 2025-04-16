@@ -2,11 +2,13 @@
   "name": "casino-parser",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "backup-db": "node --loader ts-node/esm scripts/backup-db.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
@@ -22,7 +24,9 @@
   "devDependencies": {
     "@types/react": "19.1.1",
     "autoprefixer": "^10.4.15",
+    "dotenv": "^16.5.0",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.0"
+    "tailwindcss": "^3.3.0",
+    "ts-node": "^10.9.2"
   }
 }
