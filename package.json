@@ -2,13 +2,12 @@
   "name": "casino-parser",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "backup-db": "node --loader ts-node/esm scripts/backup-db.ts"
+    "backup-db": "ts-node scripts/backup-db.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",

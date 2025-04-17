@@ -149,11 +149,16 @@ async function getCasinoDetails(id: string): Promise<CasinoDetails> {
       casino_features(*),
       casino_payment_methods(
         id,
-        payment_methods(id, name)
+        payment_methods(id, name, logo_url)
       ),
       casino_licenses(
         id,
         licenses(id, name, country_code)
+      ),
+      casino_languages(
+        id,
+        languages(id, name, country_code),
+        type
       ),
       casino_game_types(
         id,
@@ -161,7 +166,7 @@ async function getCasinoDetails(id: string): Promise<CasinoDetails> {
       ),
       casino_game_providers(
         id,
-        game_providers(id, name)
+        game_providers(id, name, logo_url)
       ),
       bonuses(id, name, type, subtype, max_cashout, min_deposit, wagering_requirements, max_bet, process_speed, free_spins_value, free_spins_conditions, other_info),
       screenshots(id, url, alt_text)
@@ -176,17 +181,13 @@ async function getCasinoDetails(id: string): Promise<CasinoDetails> {
         return notFound();
     }
 
-    // Fetch languages with join to get the names
-    const { data: languagesData } = await supabaseAdmin
-        .from('casino_languages')
-        .select(
-            `
-            id,
-            type,
-            languages:language_id(id, name, country_code)
-        `
-        )
-        .eq('casino_id', casinoId);
+    console.log('Fetched casino data:', casino);
+
+    const languagesData = casino.casino_languages;
+    if (!languagesData) {
+        console.error('No languages data found for casino:', casinoId);
+        return notFound();
+    }
 
     // Convert the data to match our interfaces
     const languages: CasinoLanguage[] = languagesData
@@ -328,6 +329,7 @@ export default async function CasinoPage({ params }: Props) {
                         established={casino.established}
                         operator={casino.operator}
                         promoTag='Nytt cashback tilbud!'
+                        licenses={licenses}
                     />
 
                     <CasinoTabs

@@ -8,6 +8,10 @@ interface CasinoHeaderProps {
     established: number | null;
     operator: string | null;
     promoTag?: string;
+    licenses?: {
+        name: string;
+        country_code?: string;
+    }[];
 }
 
 export function CasinoHeader({
@@ -17,6 +21,7 @@ export function CasinoHeader({
     established,
     operator,
     promoTag,
+    licenses,
 }: CasinoHeaderProps) {
     return (
         <div className='rounded-lg border border-purple-700 bg-indigo-950 text-white shadow-lg'>
@@ -49,6 +54,25 @@ export function CasinoHeader({
                         <span className='ml-2 text-sm text-white/60'>
                             (230 anmeldelser)
                         </span>
+
+                        {licenses && licenses.length > 0 && (
+                            <div className='flex items-center ml-4'>
+                                {licenses.map((license) => (
+                                    <img
+                                        key={license.name}
+                                        src={`/flags/${license.country_code}.svg`}
+                                        alt={license.name}
+                                        className='h-6 w-6 rounded-full border border-white'
+                                    />
+                                ))}
+
+                                <span className='ml-2 text-sm text-white/60'>
+                                    {licenses
+                                        .map((license) => license.name)
+                                        .join(', ')}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     <p className='mt-2 text-white/60'>
