@@ -828,7 +828,7 @@ export class CasinoParserService {
 
                 // First, delete any existing bonuses for this casino to avoid duplicates
                 const { error: deleteError } = await supabaseAdmin
-                    .from('bonuses')
+                    .from('no_bonuses')
                     .delete()
                     .eq('casino_id', casinoId);
 
@@ -855,7 +855,7 @@ export class CasinoParserService {
                     try {
                         const { data: insertedBonus, error: insertError } =
                             await supabaseAdmin
-                                .from('bonuses')
+                                .from('no_bonuses')
                                 .insert({
                                     casino_id: casinoId,
                                     type: 'no_deposit',
@@ -908,7 +908,7 @@ export class CasinoParserService {
                     try {
                         const { data: insertedBonus, error: insertError } =
                             await supabaseAdmin
-                                .from('bonuses')
+                                .from('no_bonuses')
                                 .insert({
                                     casino_id: casinoId,
                                     type: 'deposit',
